@@ -1,0 +1,35 @@
+{
+  "name": "authentication",
+  "version": "1.0.0",
+  "description": "Advanced Authentication in MERN stack",
+  "main": "backend/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mihirkadam19/authentication.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mihirkadam19/authentication/issues"
+  },
+  "homepage": "https://github.com/mihirkadam19/authentication#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mailtrap": "^4.1.0",
+    "mongoose": "^8.15.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
