@@ -2,10 +2,10 @@
   "name": "authentication",
   "version": "1.0.0",
   "description": "Advanced Authentication in MERN stack",
-  "main": "backend/server.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon --legacy-watch src/server.js"
   },
   "repository": {
     "type": "git",

@@ -53,7 +53,7 @@ export const signup = async (req, res) => {
 };
 
 export const login = (req, res) => {
-    res.send("Login route");
+    res.send("Login route updated");
 };
 
 export const logout = (req, res) => {
