@@ -38,7 +38,10 @@ export const signup = async (req, res) => {
         // save user to DB
         await user.save();
 
+        // create JWT token and add to cookies
         generateTokenAndSetCookie(res, user._id);
+
+        // send a verification mail
         await sendVerificationMail(email, verificationToken);
 
         res.status(201).json({
@@ -54,8 +57,42 @@ export const signup = async (req, res) => {
     }
 };
 
-export const login = (req, res) => {
-    res.send("Login route updated");
+export const login = async (req, res) => {
+    const {email, password} = req.body;
+    try{
+        if (!email || !password){
+            return res.status(400).json({message:"All fields are required."})
+        }
+        
+        const user = await User.findOne({
+            email: email
+        })
+
+        if (!user) {
+            return res.status(400).json({success: false, message: "User not found"});
+        }
+        
+        // Password Verification
+        const isMatch = await bcrypt.compare(password, user.password);
+        
+        if (isMatch){
+            user.lastLogin = Date.now();
+            generateTokenAndSetCookie(res, user._id)
+            return res.status(200).json({
+                success:true, 
+                message:"Login Successful",
+                user: {
+                    ...user._doc,
+                    password: undefined,
+                }        
+            });
+        } else {
+            return res.status(400).json({success:false, message: "Invalid Credentials"});
+        }
+    } catch(error) {
+        console.log("Error Logging in ", error);
+        return res.status(500).json({success:false, message:"Server Error"})
+    }
 };
 
 export const logout = (req, res) => {
