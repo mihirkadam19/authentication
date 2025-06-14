@@ -221,4 +221,18 @@ export const resetPassword = async (req, res) => {
         console.log("Error in Reset Password logic", error.message);
         return res.status(500).json({success: false, message: "Server Error"});
     }
+};
+
+export const checkAuth = async (req, res) => {
+    try{
+        const user = await User.findById(req.userId).select("-password")
+
+        if (!user) return res.status(400).json({success: false, message: "User not found"});
+
+        return res.status(200).json({success: true, user});
+
+    } catch(error){
+        console.log("Error in Check Auth", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
 }
