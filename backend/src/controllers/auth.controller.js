@@ -3,7 +3,7 @@ import { randomInt } from 'crypto';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto'; 
 import { generateTokenAndSetCookie } from '../utils/genTokenAndSetCookie.js';
-import { sendVerificationMail, sendWelcomeEmail, sendPasswordResetEmail } from '../mailtrap/email.js';
+import { sendVerificationMail, sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail } from '../mailtrap/email.js';
 
 export const signup = async (req, res) => {
     const { name, email, password } = req.body;
@@ -179,6 +179,46 @@ export const forgotPassword = async (req, res) => {
 
     } catch(error) {
         console.log("Error in Forgot Password logic", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+};
+
+export const resetPassword = async (req, res) => {
+    try{
+        const {token} = req.params;
+        const {password} = req.body;
+
+        // find user with same reset token and make sure it is not expired
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpiresAt: { $gt : Date.now() },
+        });
+
+        if (!user) {
+            return res.status(400).json({success: false, message: "Invalid or expired reset token"});
+        }
+
+        // update password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        user.password = hashedPassword;
+
+        // remove reset token and expiration from db
+        user.resetPasswordExpiresAt=undefined;
+        user.resetPasswordToken=undefined;
+
+        await user.save();
+
+        //sending success email
+        await sendResetSuccessEmail(user.email, user.name);
+        
+        // logging out user
+        res.clearCookie("token")
+        return res.status(200).json({success: true, message: "Password reset successfully"})
+
+    } catch(error) {
+        console.log("Error in Reset Password logic", error.message);
         return res.status(500).json({success: false, message: "Server Error"});
     }
 }
