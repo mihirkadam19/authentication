@@ -4,11 +4,11 @@ import { signup, login, logout, verifyEmail } from '../controllers/auth.controll
 const router = express.Router();
 
 router.post("/signup", signup);
+router.post("/verify-email", verifyEmail)
+router.post("/logout", logout);
 
+// TO DO
 router.post("/login", login);
 
-router.get("/logout", logout);
-
-router.post("/verify-email", verifyEmail)
 
 export default router;

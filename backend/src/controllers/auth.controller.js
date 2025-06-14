@@ -59,7 +59,13 @@ export const login = (req, res) => {
 };
 
 export const logout = (req, res) => {
-    res.send("Logout route");
+    try{
+        res.clearCookie("token")
+        res.status(200).json({success:true, message:"Logout Successful"})
+    } catch(error){
+        console.log("Error logging out", error.message);
+        return res.status(500).json({success:false, message:"Server Error"})
+    }
 };
 
 export const verifyEmail = async (req, res) => {
