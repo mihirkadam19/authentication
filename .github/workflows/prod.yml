@@ -1,0 +1,49 @@
+name: Publish Docker image to GHCR
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Commit SHA to checkout (optional)'
+        required: false
+        default: ''
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    env:
+      app_name: backend  # image name
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_sha != '' && github.event.inputs.commit_sha || github.ref }}
+
+      - name: Set up commit SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image with tags
+        run: |
+          docker build -f backend/Dockerfile.prod \
+            -t ghcr.io/${{ github.repository_owner }}/$app_name:latest \
+            -t ghcr.io/${{ github.repository_owner }}/$app_name:${{ env.sha_short }} \
+            ./backend
+
+      - name: Push Docker image tags
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/$app_name:latest
+          docker push ghcr.io/${{ github.repository_owner }}/$app_name:${{ env.sha_short }}
