@@ -1,8 +1,9 @@
 import { User } from '../models/user.model.js'
 import { randomInt } from 'crypto';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto'; 
 import { generateTokenAndSetCookie } from '../utils/genTokenAndSetCookie.js';
-import { sendVerificationMail, sendWelcomeEmail } from '../mailtrap/email.js';
+import { sendVerificationMail, sendWelcomeEmail, sendPasswordResetEmail } from '../mailtrap/email.js';
 
 export const signup = async (req, res) => {
     const { name, email, password } = req.body;
@@ -145,3 +146,39 @@ export const verifyEmail = async (req, res) => {
         return res.status(500).json({success: false, message: "Server Error"})
     }
 };
+
+export const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    try{
+        if (!email) {
+            return res.status(400).json({success: false, message:"Email is required"})
+        }
+        
+        const user = await User.findOne({
+            email: email
+        })
+
+        if (!user) {
+            return res.status(400).json({success: false, message: "User not found"});
+        }
+
+        // setting up a user token for 2 factor authentication with expiration
+        user.resetPasswordToken = crypto.randomBytes(24).toString('hex');
+        user.resetPasswordExpiresAt = new Date(Date.now() + 15 * 60 * 1000);    //  15 minutes expiration
+
+        // saving to db
+        await user.save()
+
+        // send password reset email
+        await sendPasswordResetEmail(user.email, user.name, `${process.env.CLIENT_URL}/reset-password/${user.resetPasswordToken}`)
+
+        return res.status(200).json({
+            success: true,
+            message: "Password Reset link has been sent to your email",
+        })
+
+    } catch(error) {
+        console.log("Error in Forgot Password logic", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+}
