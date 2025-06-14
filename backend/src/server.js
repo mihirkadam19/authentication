@@ -15,9 +15,10 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
+app.get("/api/health-check", (req, res) => {
+    res.send("Healthy");
 });
+
 app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {

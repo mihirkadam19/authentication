@@ -1,0 +1,20 @@
+# Use Node.js LTS (alpine = smaller image)
+FROM node:20-alpine
+
+# Create app directory inside container
+WORKDIR /usr/src/app
+
+# Copy only package files first (to leverage Docker layer caching)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the entire source code into the container
+COPY src/ ./src
+
+# Expose the backend port
+EXPOSE 5000
+
+# Run the production server with nodemon
+CMD ["npm", "run", "prod"]
