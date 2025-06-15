@@ -93,3 +93,37 @@ export const PASSWORD_RESET_REQUEST_TEMPLATE = `
 </body>
 </html>
 `;
+
+export const WELCOME_EMAIL_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome Aboard</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">Welcome to My Website!</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello {name},</p>
+    <p>I'm thrilled to have you here. Thank you for exploring my website — I hope you find it helpful and engaging.</p>
+    <p>If you'd like to stay connected or learn more about my work, feel free to visit my profiles below:</p>
+    <div style="text-align: center; margin: 20px 0;">
+      <a href="https://linkedin.com/in/mihir-kadam-447a8421a" target="_blank" style="margin: 0 10px;">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" width="32" height="32" style="vertical-align: middle;">
+      </a>
+      <a href="https://github.com/mihirkadam19" target="_blank" style="margin: 0 10px;">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32" height="32" style="vertical-align: middle;">
+      </a>
+    </div>
+    <p>Looking forward to staying in touch and sharing more with you soon.</p>
+    <p>Warm regards,<br>Mihir Kadam</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message — please do not reply directly to this email.</p>
+  </div>
+</body>
+</html>
+`;

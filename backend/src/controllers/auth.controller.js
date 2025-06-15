@@ -3,7 +3,8 @@ import { randomInt } from 'crypto';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto'; 
 import { generateTokenAndSetCookie } from '../utils/genTokenAndSetCookie.js';
-import { sendVerificationMail, sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail } from '../mailtrap/email.js';
+//import { sendVerificationMail, sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail } from '../mail/mailtrap/mailtrap.email.js';
+import { sendVerificationMail, sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail } from '../mail/gmail/smtp/smtp.email.js';
 
 export const signup = async (req, res) => {
     const { name, email, password } = req.body;
