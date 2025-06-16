@@ -1,9 +1,17 @@
 import {motion} from 'framer-motion';
 import { Link, useNavigate } from "react-router-dom";
 import Socials from '../components/Socials';
-import { Linkedin } from 'lucide-react';
+import { useAuthStore } from '../store/auth.store';
+
+
 
 const HomePage = () => {
+
+    const {user, logout} = useAuthStore();
+
+    const handleLogout = () => {
+        logout();
+    }
   return (
     <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -53,13 +61,18 @@ const HomePage = () => {
                 
             </div>
 
-            <div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
-                <p className='text-sm text-gray-400'>
-                    You can exit from here:{" "}
-                    <Link to={"/login"} className='text-cyan-300 hover:underline'>
-                        Logout
-                    </Link>
-                </p>
+            <div className='px-4 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
+                <motion.button
+                    className='w-full py-3 px-3 bg-gradient-to-r from-cyan-600 to-teal-500 text-white 
+                    font-bold rounded-lg shadow-lg hover:from-cyan-700
+                    hover:to-teal-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2
+                    focus:ring-offset-gray-900 transition duration-200'
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleLogout}
+                >
+                    Logout
+                </motion.button>
             </div>
         </motion.div>
   )
