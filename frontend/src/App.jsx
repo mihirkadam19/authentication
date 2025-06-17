@@ -4,6 +4,8 @@ import {Routes, Route, Navigate} from 'react-router-dom';
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import EmailVerifyPage from "./pages/EmailVerifyPage";
 import { useAuthStore } from "./store/auth.store";
 import { useEffect } from "react";
@@ -88,6 +90,14 @@ function App() {
     
         <Route path='/login' element={<RedirectAuthenticatedUser>
             <LoginPage/>
+          </RedirectAuthenticatedUser>} />
+        
+        <Route path='/forgot-password' element={<RedirectAuthenticatedUser>
+            <ForgotPassword/>
+          </RedirectAuthenticatedUser>} />
+        
+        <Route path='/reset-password/:token' element={<RedirectAuthenticatedUser>
+            <ResetPassword/>
           </RedirectAuthenticatedUser>} />
 
       </Routes>
