@@ -4,8 +4,10 @@ import {Routes, Route, Navigate} from 'react-router-dom';
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import EmailVerifyPage from "./pages/EmailVerifyPage";
 import { useAuthStore } from "./store/auth.store";
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -30,6 +32,19 @@ const RedirectAuthenticatedUser = ({children}) => {
   if (isAuthenticated && user.isVerified){
 
     return <Navigate to="/" replace />
+  }
+  return children;
+}
+
+// redirect if authenticated and verified
+const RedirectIfVerifiedUser = ({children}) => {
+  const {isAuthenticated, user} = useAuthStore();
+  if (!isAuthenticated){
+    return <Navigate to="/login" replace/>
+  }
+
+  if (user.isVerified){
+    return <Navigate to="/" replace/>
   }
   return children;
 }
@@ -62,18 +77,24 @@ function App() {
             <HomePage />
           </ProtectedRoute>} />
 
+
+
+        <Route path='/verify-email' element={<RedirectIfVerifiedUser>
+            <EmailVerifyPage/>
+          </RedirectIfVerifiedUser>} />
+
+
           
         <Route path='/signup' element={<RedirectAuthenticatedUser>
             <SignUpPage/>
           </RedirectAuthenticatedUser>} />
-
-
+    
         <Route path='/login' element={<RedirectAuthenticatedUser>
             <LoginPage/>
           </RedirectAuthenticatedUser>} />
 
       </Routes>
-      
+      <Toaster/>
     </div>
   )
 }
