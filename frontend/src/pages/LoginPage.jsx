@@ -4,6 +4,7 @@ import { Mail, Lock, Loader } from "lucide-react";
 import Input from "../components/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/auth.store.js";
+import toast from "react-hot-toast";
 
 
 const LoginPage = () => {
@@ -21,8 +22,10 @@ const LoginPage = () => {
     try {
       await login(email, password);
       navigate("/");
+	  toast.success("User logged in ...")
   } catch(error) {
       console.log(error);
+	  toast.error(error.response?.data?.message || "Something went wrong");
   }
 	};
 
@@ -60,7 +63,6 @@ const LoginPage = () => {
 							Forgot password?
 						</Link>
 					</div>
-					{error && <p className='text-red-500 font-semibold mb-2'>{error}</p>}
 
 					<motion.button
 						whileHover={{ scale: 1.02 }}

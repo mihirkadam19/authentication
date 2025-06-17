@@ -13,7 +13,7 @@ const ForgotPassword = () => {
 
     // state to check if the form is submitted
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const {isLoading, forgotPassword, error } = useAuthStore();
+    const {isLoading, forgotPassword} = useAuthStore();
 
     const handleSubmit = async (e) => {
         e.preventDefault();

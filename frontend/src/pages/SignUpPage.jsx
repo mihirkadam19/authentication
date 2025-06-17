@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import { useAuthStore } from '../store/auth.store';
+import toast from 'react-hot-toast';
 
 const SignUpPage = () => {
     
@@ -23,8 +24,10 @@ const SignUpPage = () => {
         try {
             await signup(email, password, name);
             navigate("/verify-email");
+            toast.success("User signed up")
         } catch(error) {
             console.log(error);
+            toast.error(error.response?.data?.message || "Something went wrong");
         }
     };
 
@@ -63,7 +66,6 @@ const SignUpPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        {error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
 
                         {<PasswordStrengthMeter password={password} />}
 

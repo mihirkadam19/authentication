@@ -15,7 +15,7 @@ const EmailVerifyPage = () => {
 
 
 
-    const { error, isLoading, verifyEmail, user } = useAuthStore();
+    const {isLoading, verifyEmail, user } = useAuthStore();
 
     // Move to next cell or Copy Paste logic or both
 	const handleChange = (index, value) => {
@@ -61,6 +61,7 @@ const EmailVerifyPage = () => {
 			toast.success("Email verified successfully");
 		} catch (error) {
 			console.log(error);
+			toast.error(error.response?.data?.message || "Something went wrong");
 		}
 	};
 
@@ -100,7 +101,6 @@ const EmailVerifyPage = () => {
                         />
                     ))}
                 </div>
-                {error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
                 <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
