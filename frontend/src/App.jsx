@@ -10,6 +10,7 @@ import EmailVerifyPage from "./pages/EmailVerifyPage";
 import { useAuthStore } from "./store/auth.store";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import Marquee from "./components/Marquee";
 
 
 
@@ -101,6 +102,7 @@ function App() {
           </RedirectAuthenticatedUser>} />
 
       </Routes>
+      <Marquee/>
       <Toaster/>
     </div>
   )
