@@ -52,16 +52,13 @@ const RedirectIfVerifiedUser = ({children}) => {
 
 function App() {
 
-  const {isCheckingAuth, checkAuth, isAuthenticated } = useAuthStore();
+  const {isCheckingAuth, checkAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
   if (isCheckingAuth) return <LoadingSpinner />;
-
-  console.log("isAuthenticated", isAuthenticated);
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br 
