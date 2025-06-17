@@ -103,7 +103,11 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
     try{
-        res.clearCookie("jwt")
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+        });
         res.status(200).json({success:true, message:"Logout Successful"})
     } catch(error){
         console.log("Error logging out", error.message);
@@ -231,8 +235,6 @@ export const resetPassword = async (req, res) => {
         //sending success email
         await sendResetSuccessEmail(user.email, user.name);
         
-        // logging out user
-        res.clearCookie("token")
         return res.status(200).json({success: true, message: "Password reset successfully"})
 
     } catch(error) {
