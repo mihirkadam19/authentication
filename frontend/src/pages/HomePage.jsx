@@ -2,6 +2,7 @@ import {motion} from 'framer-motion';
 import { Link, useNavigate } from "react-router-dom";
 import Socials from '../components/Socials';
 import { useAuthStore } from '../store/auth.store';
+import toast from "react-hot-toast";
 
 
 
@@ -11,6 +12,7 @@ const HomePage = () => {
 
     const handleLogout = () => {
         logout();
+        toast.success("User Logged out")
     }
   return (
     <motion.div
