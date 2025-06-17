@@ -28,12 +28,16 @@ export const signup = async (req, res) => {
         const verificationToken = randomInt(100000, 999999);
         const verificationTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); //24 hours
 
+        // hashing verification token
+        const vt_salt = await bcrypt.genSalt(10);
+        const hashedVerficationToken = await bcrypt.hash(verificationToken.toString(), vt_salt);
+
         // create user 
         const user = new User({ 
             name, 
             email, 
             password: hashedPassword, 
-            verificationToken, 
+            verificationToken: hashedVerficationToken, 
             verificationTokenExpiresAt 
         });
 
@@ -114,34 +118,47 @@ export const verifyEmail = async (req, res) => {
         if (!id || !code ){
             return res.status(400).json({message: "Alll fields are required"})
         }
+
     
         const user = await User.findOne({
             _id: id,
-            verificationToken: code,
             verificationTokenExpiresAt: { $gt: Date.now() },
         });
+
 
         if (!user){
             return res.status(400).json({
                 success: false,
-                message: "Invalid or Expired verification code"
+                message: "Expired verification code"
+            });
+        }
+
+        const isMatch = await bcrypt.compare(code.toString(), user.verificationToken);
+
+        if (isMatch){
+
+            user.isVerified = true;
+            user.verificationToken=undefined;
+            user.verificationTokenExpiresAt=undefined;
+            await user.save();
+        
+            await sendWelcomeEmail(user.email, user.name)
+            return res.status(200).json({
+                success: true,
+                message: "Email verified succesfully",
+                user: {
+                    ...user._doc,
+                    password: undefined,
+                }
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Token"
             });
         }
     
-        user.isVerified = true;
-        user.verificationToken=undefined;
-        user.verificationTokenExpiresAt=undefined;
-        await user.save();
-    
-        await sendWelcomeEmail(user.email, user.name)
-        return res.status(200).json({
-            success: true,
-            message: "Email verified succesfully",
-            user: {
-                ...user._doc,
-                password: undefined,
-            }
-        });
+        
     } catch(error){
         console.log("error in verifying email", error.message)
         return res.status(500).json({success: false, message: "Server Error"})
